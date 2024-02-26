@@ -1,4 +1,6 @@
+const { v4: uuidv4 } = require('uuid');
 const product = require('../models/products.model');
+
 const allProducts = async (req, res) => {
     try {
         const allProduct = await product.find();
@@ -17,6 +19,22 @@ const allProducts = async (req, res) => {
         }
     } catch (error) {
         res.status(500).send({ message: error.message })
+    }
+}
+
+const productsCreate = async (req, res) => {
+    try {
+        const newProduct = new product({
+            id: uuidv4(),
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            ratting: req.body.ratting
+        })
+        await newProduct.save();
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 }
 
@@ -185,6 +203,7 @@ const updateProduct = async (req, res) => {
 }
 module.exports = {
     allProducts,
+    productsCreate,
     speceficProduct,
     comparisonProduct,
     logicProduct,
